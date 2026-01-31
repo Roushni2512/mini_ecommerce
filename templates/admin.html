@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin - Mini Shop{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem;">
+    <h1>Dashboard</h1>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; margin-top: 2rem;">
+        <div class="form-container" style="margin: 0; box-shadow: none; border: 1px solid #eee;">
+            <h2 style="margin-bottom: 1.5rem;">Add Product</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="url" name="image_url">
+                </div>
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
+
+        <div>
+            <h2 style="margin-bottom: 1.5rem;">Inventory</h2>
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Img</th>
+                        <th style="text-align: left;">Name</th>
+                        <th style="text-align: left;">Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            {% if product.image_url %}
+                            <img src="{{ product.image_url }}" style="width: 40px; height: 40px; object-fit: cover;">
+                            {% endif %}
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>${{ product.price }}</td>
+                        <td style="text-align: right;">
+                            <a href="{{ url_for('delete_product', product_id=product.id) }}" style="color: #c00;">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4">No inventory items.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

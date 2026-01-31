@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Mini Shop - Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Minimalist Essentials.</h1>
+    <p>Curated collection of everyday items.</p>
+</div>
+
+<div class="container">
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <button class="wishlist-btn" data-product-id="{{ product.id }}">
+                <i class="far fa-heart"></i>
+            </button>
+            {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300x320" alt="Placeholder">
+            {% endif %}
+            <h3>{{ product.name }}</h3>
+            <div class="price">${{ product.price }}</div>
+            <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to Cart</button>
+        </div>
+        {% else %}
+        <p>No products available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

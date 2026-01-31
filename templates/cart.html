@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Cart - Mini Shop{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; max-width: 1000px;">
+    <h1 style="text-align: left; font-size: 2rem; margin-bottom: 2rem;">My Bag ({{ cart_count }} items)</h1>
+
+    {% if cart_items %}
+    <div class="cart-grid">
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item-row">
+                <div class="cart-item-image">
+                    {% if item.product.image_url %}
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                    {% else %}
+                    <div style="width: 100px; height: 120px; background: #eee;"></div>
+                    {% endif %}
+                </div>
+                <div class="cart-item-details">
+                    <div class="item-brand">Mini Shop</div>
+                    <div class="item-name">{{ item.product.name }}</div>
+                    <div class="item-price">${{ item.product.price }}</div>
+
+                    <div class="item-controls">
+                        <div class="quantity-pill">
+                            <a href="{{ url_for('update_quantity', item_id=item.id, action='decrease') }}"
+                                class="qty-btn"><i class="fas fa-minus"></i></a>
+                            <span class="qty-val">{{ item.quantity }}</span>
+                            <a href="{{ url_for('update_quantity', item_id=item.id, action='increase') }}"
+                                class="qty-btn"><i class="fas fa-plus"></i></a>
+                        </div>
+                        <a href="{{ url_for('remove_from_cart', item_id=item.id) }}" class="remove-link">Remove</a>
+                    </div>
+                </div>
+                <div class="item-total-price">
+                    ${{ item.product.price * item.quantity }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>${{ total }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Free</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>${{ total }}</span>
+            </div>
+            <button class="checkout-btn" onclick="alert('Checkout feature coming soon!')">
+                CHECKOUT
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; margin-top: 4rem;">
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #666;">Your bag is empty.</p>
+        <a href="{{ url_for('home') }}">
+            <button class="primary-btn" style="max-width: 200px;">START SHOPPING</button>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

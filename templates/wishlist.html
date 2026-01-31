@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Mini Shop - Wishlist{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 100px;">
+    <h2>Your Wishlist</h2>
+    <div class="product-grid">
+        {% for item in wishlist_items %}
+        <div class="product-card">
+            <button class="wishlist-btn" data-product-id="{{ item.product.id }}">
+                <i class="fas fa-heart" style="color: #e74c3c;"></i>
+            </button>
+            {% if item.product.image_url %}
+            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300x320" alt="Placeholder">
+            {% endif %}
+            <h3>{{ item.product.name }}</h3>
+            <div class="price">${{ item.product.price }}</div>
+            <button class="add-to-cart-btn" data-product-id="{{ item.product.id }}">Add to Cart</button>
+        </div>
+        {% else %}
+        <p>Your wishlist is empty.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

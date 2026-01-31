@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mini Shop{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <nav>
+        <div class="brand">
+            <a href="{{ url_for('home') }}">MINI SHOP</a>
+        </div>
+
+        <form action="{{ url_for('home') }}" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search products..."
+                value="{{ search_query if search_query else '' }}">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Shop</a>
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('wishlist') }}">Wishlist</a>
+            <a href="{{ url_for('cart') }}" class="cart-link">
+                Cart
+                {% if cart_count > 0 %}
+                <span class="cart-badge">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+            {% if session.get('is_admin') %}
+            <a href="{{ url_for('admin') }}">Dashboard</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="toast {{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Mini Shop. Minimalist Design.</p>
+    </footer>
+
+    <script>
+        // Auto-remove toasts after 3 seconds
+        function showToast(message, category = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${category}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const toasts = document.querySelectorAll('.toast');
+            toasts.forEach(t => {
+                setTimeout(() => {
+                    t.style.opacity = '0';
+                    setTimeout(() => t.remove(), 300);
+                }, 3000);
+            });
+
+            // AJAX Add to Cart
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const productId = btn.dataset.productId;
+
+                    try {
+                        const response = await fetch(`/add_to_cart/${productId}`, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        const data = await response.json();
+
+                        if (data.error === 'login_required') {
+                            window.location.href = "{{ url_for('login') }}";
+                            return;
+                        }
+
+                        if (data.success) {
+                            showToast(data.message);
+                            // Update badge
+                            const badge = document.querySelector('.cart-badge');
+                            if (badge) {
+                                badge.textContent = data.cart_count;
+                            } else {
+                                // Create badge if it doesn't exist
+                                const link = document.querySelector('.cart-link');
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'cart-badge';
+                                newBadge.textContent = data.cart_count;
+                                link.appendChild(newBadge);
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Error adding to cart:', err);
+                    }
+                });
+            });
+
+            // Wishlist Toggle
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const productId = btn.dataset.productId;
+                    const icon = btn.querySelector('i');
+
+                    try {
+                        const response = await fetch(`/toggle_wishlist/${productId}`, {
+                            method: 'POST'
+                        });
+
+                        const data = await response.json();
+
+                        if (data.error === 'login_required') {
+                            window.location.href = "{{ url_for('login') }}";
+                            return;
+                        }
+
+                        if (data.success) {
+                            if (data.action === 'added') {
+                                icon.classList.remove('far');
+                                icon.classList.add('fas');
+                                icon.style.color = '#e74c3c';
+                                showToast('Added to wishlist');
+                            } else {
+                                icon.classList.remove('fas');
+                                icon.classList.add('far');
+                                icon.style.color = '';
+                                showToast('Removed from wishlist');
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Error toggling wishlist:', err);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
