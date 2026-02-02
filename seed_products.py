@@ -2,69 +2,84 @@ from app import app, db, Product
 
 def seed_products():
     with app.app_context():
-        # List of aesthetic/minimalist sample products
+        # List of aesthetic/minimalist sample products categorized
         products = [
+            # MEN
             {
-                "name": "Minimalist Watch",
-                "price": 120.00,
-                "image_url": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                "name": "Ceramic Vase",
-                "price": 45.00,
-                "image_url": "https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                "name": "Leather Tote",
-                "price": 180.00,
-                "image_url": "https://images.unsplash.com/photo-1590874102752-cecfce64e559?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                "name": "Bamboo Plant",
+                "name": "Men's Minimalist Tee",
                 "price": 25.00,
-                "image_url": "https://images.unsplash.com/photo-1599598425947-738d99c35b6c?auto=format&fit=crop&w=400&q=80"
+                "image_url": "https://images.unsplash.com/photo-1521572101914-14798a6f0b74?auto=format&fit=crop&w=800&q=80",
+                "category": "Men"
             },
             {
-                "name": "Analog Camera",
-                "price": 350.00,
-                "image_url": "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                "name": "Linen Notebook",
-                "price": 18.00,
-                "image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=400&q=80"
-            },
-             {
-                "name": "Desk Lamp",
-                "price": 60.00,
-                "image_url": "https://images.unsplash.com/photo-1507473888900-52e1adad5481?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                "name": "Modern Chair",
-                "price": 150.00,
-                "image_url": "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=400&q=80"
-            },
-            {
-                "name": "Bamboo Chair",
+                "name": "Men's Classic Blazer",
                 "price": 120.00,
-                "image_url": "https://images.unsplash.com/photo-1551216393-27038e932b12?auto=format&fit=crop&w=400&q=80"
+                "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+                "category": "Men"
+            },
+            {
+                "name": "Men's Urban Sneakers",
+                "price": 85.00,
+                "image_url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=800&q=80",
+                "category": "Men"
+            },
+            # WOMEN
+            {
+                "name": "Women's Silk Blouse",
+                "price": 45.00,
+                "image_url": "https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?auto=format&fit=crop&w=800&q=80",
+                "category": "Women"
+            },
+            {
+                "name": "Women's Summer Dress",
+                "price": 65.00,
+                "image_url": "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=800&q=80",
+                "category": "Women"
+            },
+            {
+                "name": "Women's Leather Tote",
+                "price": 180.00,
+                "image_url": "https://images.unsplash.com/photo-1590874102752-cecfce64e559?auto=format&fit=crop&w=800&q=80",
+                "category": "Women"
+            },
+            # KIDS
+            {
+                "name": "Kids' Cotton Hoodie",
+                "price": 35.00,
+                "image_url": "https://images.unsplash.com/photo-1519233073524-7935c363988c?auto=format&fit=crop&w=800&q=80",
+                "category": "Kids"
+            },
+            {
+                "name": "Kids' Denim Jacket",
+                "price": 55.00,
+                "image_url": "https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&w=800&q=80",
+                "category": "Kids"
+            },
+            {
+                "name": "Kids' Canvas Shoes",
+                "price": 28.00,
+                "image_url": "https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=800&q=80",
+                "category": "Kids"
             }
         ]
 
-        print("Seeding products...")
+        print("Seeding categorized products...")
+        
+        # Clear existing products to avoid duplicates/confusion with old non-categorized ones
+        # Use with caution in real apps, but for this exercise it helps see the change clearly
+        # db.session.query(Product).delete() 
         
         for product_data in products:
-            # Check if product exists
             existing = Product.query.filter_by(name=product_data['name']).first()
             if not existing:
                 new_product = Product(**product_data)
                 db.session.add(new_product)
-                print(f"Added: {product_data['name']}")
+                print(f"Added: {product_data['name']} ({product_data['category']})")
             else:
-                # Update image_url if exists to ensure they are fixed
                 existing.image_url = product_data['image_url']
-                # existing.price = product_data['price'] # Optional: update price too
-                print(f"Updated image for: {product_data['name']}")
+                existing.category = product_data['category']
+                existing.price = product_data['price']
+                print(f"Updated: {product_data['name']}")
         
         db.session.commit()
         print("Seeding complete!")

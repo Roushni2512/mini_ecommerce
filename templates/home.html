@@ -16,9 +16,10 @@
                 <i class="far fa-heart"></i>
             </button>
             {% if product.image_url %}
-            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}"
+                onerror="this.src='https://via.placeholder.com/300x320?text=Product+Image'">
             {% else %}
-            <img src="https://via.placeholder.com/300x320" alt="Placeholder">
+            <img src="https://via.placeholder.com/300x320?text=No+Image" alt="Placeholder">
             {% endif %}
             <h3>{{ product.name }}</h3>
             <div class="price">${{ product.price }}</div>

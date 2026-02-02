@@ -21,26 +21,59 @@
             <button type="submit"><i class="fas fa-search"></i></button>
         </form>
 
-        <div class="nav-links">
-            <a href="{{ url_for('home') }}">Shop</a>
+        <div class="nav-actions">
+            <a href="{{ url_for('home') }}" class="nav-link-col">
+                <i class="fas fa-store"></i>
+                <span>Shop</span>
+            </a>
+
+            <a href="{{ url_for('cart') }}" class="nav-link-col cart-link">
+                <div class="icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    {% if cart_count > 0 %}
+                    <span class="cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </div>
+                <span>Cart</span>
+            </a>
+
             {% if session.get('user_id') %}
-            <a href="{{ url_for('wishlist') }}">Wishlist</a>
-            <a href="{{ url_for('cart') }}" class="cart-link">
-                Cart
-                {% if cart_count > 0 %}
-                <span class="cart-badge">{{ cart_count }}</span>
-                {% endif %}
+            <a href="{{ url_for('wishlist') }}" class="nav-link-col">
+                <i class="far fa-heart"></i>
+                <span>Wishlist</span>
             </a>
             {% if session.get('is_admin') %}
-            <a href="{{ url_for('admin') }}">Dashboard</a>
+            <a href="{{ url_for('admin') }}" class="nav-link-col">
+                <i class="fas fa-user-shield"></i>
+                <span>Admin</span>
+            </a>
             {% endif %}
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('logout') }}" class="nav-link-col">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
             {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('login') }}" class="nav-link-col">
+                <i class="fas fa-user"></i>
+                <span>Login</span>
+            </a>
+            <a href="{{ url_for('register') }}" class="nav-link-col">
+                <i class="fas fa-user-plus"></i>
+                <span>Register</span>
+            </a>
             {% endif %}
         </div>
     </nav>
+
+    <div class="category-nav">
+        <a href="{{ url_for('home') }}" class="category-link {% if not current_category %}active{% endif %}">ALL</a>
+        <a href="{{ url_for('home', category='Men') }}"
+            class="category-link {% if current_category == 'Men' %}active{% endif %}">MEN</a>
+        <a href="{{ url_for('home', category='Women') }}"
+            class="category-link {% if current_category == 'Women' %}active{% endif %}">WOMEN</a>
+        <a href="{{ url_for('home', category='Kids') }}"
+            class="category-link {% if current_category == 'Kids' %}active{% endif %}">KIDS</a>
+    </div>
 
     <!-- Toast Notifications -->
     <div id="toast-container">

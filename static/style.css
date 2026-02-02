@@ -44,6 +44,33 @@ nav {
     z-index: 1000;
 }
 
+.category-nav {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 1rem 0;
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 1rem;
+}
+
+.category-link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+    transition: 0.2s;
+}
+
+.category-link:hover,
+.category-link.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
 nav .brand a {
     font-size: 1.25rem;
     font-weight: 800;
@@ -261,6 +288,97 @@ main {
     font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
+}
+
+/* Auth Pages - Premium Modern Design */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - var(--nav-height) - 100px);
+    background-color: #fdfdfd;
+}
+
+.auth-card {
+    background: #fff;
+    padding: 40px 30px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.auth-card h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.auth-input:focus {
+    border-color: #282c3f;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    opacity: 0.9;
+}
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.auth-footer a {
+    color: var(--accent);
+    font-weight: 700;
+    margin-left: 5px;
 }
 
 /* Toast Notification */

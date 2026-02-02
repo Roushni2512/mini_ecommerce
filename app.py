@@ -22,7 +22,7 @@ class Product(db.Model):
     name = db.Column(db.String(150), nullable=False)
     price = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(500), nullable=True)
-    # category removed as per user request, kept in DB schema optionally but unused logic
+    category = db.Column(db.String(50), nullable=True) # Added category field
 
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,12 +43,19 @@ class Wishlist(db.Model):
 @app.route('/')
 def home():
     query = request.args.get('q')
-    if query:
-        products = Product.query.filter(Product.name.ilike(f'%{query}%')).all()
-    else:
-        products = Product.query.all()
+    category = request.args.get('category')
     
-    return render_template('home.html', products=products, search_query=query)
+    products_query = Product.query
+    
+    if query:
+        products_query = products_query.filter(Product.name.ilike(f'%{query}%'))
+    
+    if category:
+        products_query = products_query.filter(Product.category == category)
+        
+    products = products_query.all()
+    
+    return render_template('home.html', products=products, search_query=query, current_category=category)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
